@@ -1,94 +1,29 @@
-import { ConnectWallet } from "@thirdweb-dev/react";
+import { ConnectWallet, useSDK, useContract, useNFT } from "@thirdweb-dev/react";
 import "./styles/Home.css";
 
 export default function Home() {
+  const contract = useContract("0x95d29191a794A5B4f25ff1777943106C3f82516e")
+  const contract2 = useContract("0x72e190ea693c2E9b522d0abd66ebFd4240140004")
+  const { data: nft, isLoading, error } = useNFT(contract, 0);
+  const { data: nft2, isLoading2, error2 } = useNFT(contract2, 0);
+  const sdk = useSDK()
+
+  async function getNft() {
+    const con = await sdk.getContract("0x95d29191a794A5B4f25ff1777943106C3f82516e")
+    const nft = await contract.erc721.get(0);
+    console.log(nft)
+
+
+
+  }
+  if (isLoading) return <div>Loading...</div>;
+  if (error || !nft) return <div>NFT not found</div>;
+  if (isLoading2) return <div>Loading...</div>;
+  if (error2 || !nft2) return <div>NFT not found</div>;
   return (
-    <main className="main">
-      <div className="container">
-        <div className="header">
-          <h1 className="title">
-            Welcome to{" "}
-            <span className="gradient-text-0">
-              <a
-                href="https://thirdweb.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                thirdweb.
-              </a>
-            </span>
-          </h1>
-
-          <p className="description">
-            Get started by configuring your desired network in{" "}
-            <code className="code">src/index.js</code>, then modify the{" "}
-            <code className="code">src/App.js</code> file!
-          </p>
-
-          <div className="connect">
-            <ConnectWallet />
-          </div>
-        </div>
-
-        <div className="grid">
-          <a
-            href="https://portal.thirdweb.com/"
-            className="card"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="/images/portal-preview.png"
-              alt="Placeholder preview of starter"
-            />
-            <div className="card-text">
-              <h2 className="gradient-text-1">Portal ➜</h2>
-              <p>
-                Guides, references, and resources that will help you build with
-                thirdweb.
-              </p>
-            </div>
-          </a>
-
-          <a
-            href="https://thirdweb.com/dashboard"
-            className="card"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="/images/dashboard-preview.png"
-              alt="Placeholder preview of starter"
-            />
-            <div className="card-text">
-              <h2 className="gradient-text-2">Dashboard ➜</h2>
-              <p>
-                Deploy, configure, and manage your smart contracts from the
-                dashboard.
-              </p>
-            </div>
-          </a>
-
-          <a
-            href="https://thirdweb.com/templates"
-            className="card"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="/images/templates-preview.png"
-              alt="Placeholder preview of templates"
-            />
-            <div className="card-text">
-              <h2 className="gradient-text-3">Templates ➜</h2>
-              <p>
-                Discover and clone template projects showcasing thirdweb
-                features.
-              </p>
-            </div>
-          </a>
-        </div>
-      </div>
-    </main>
+    <>
+      <ThirdwebNftMedia metadata={nft.metadata} />
+      <ThirdwebNftMedia metadata={nft2.metadata} />
+    </>
   );
 }
